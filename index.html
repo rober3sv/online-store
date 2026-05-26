@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -53,9 +52,11 @@
             padding: 40px;
             border-radius: 12px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            margin-bottom: 40px;
         }
         @media (max-width: 768px) {
             .product-container { grid-template-columns: 1fr; }
+            .about-section { grid-template-columns: 1fr !important; }
         }
         .product-image {
             display: flex;
@@ -70,6 +71,7 @@
             max-width: 100%;
             max-height: 400px;
             object-fit: contain;
+            border-radius: 4px;
         }
         .product-details h2 {
             margin-top: 0;
@@ -88,7 +90,7 @@
             margin-bottom: 30px;
         }
         
-        /* Material Selector and Custom Dropdown Styles */
+        /* Material Selector and Tooltip Styles */
         .option-group {
             margin-bottom: 25px;
             position: relative;
@@ -105,8 +107,6 @@
             color: #718093;
             text-transform: uppercase;
         }
-        
-        /* Tooltip Container */
         .info-icon {
             background: #718093;
             color: white;
@@ -120,7 +120,6 @@
             cursor: help;
             font-weight: bold;
         }
-        /* Tooltip Text (Hidden by default) */
         .tooltip-box {
             visibility: hidden;
             width: 280px;
@@ -153,9 +152,6 @@
             color: #2f3640;
             outline: none;
         }
-        select:focus {
-            border-color: #1e272e;
-        }
         .buy-btn {
             width: 100%;
             background-color: #2ed573;
@@ -172,6 +168,34 @@
         .buy-btn:hover {
             background-color: #26af5f;
         }
+
+        /* About Me Section Styles */
+        .about-section {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 40px;
+            align-items: center;
+        }
+        .about-image img {
+            width: 100%;
+            border-radius: 50%;
+            border: 4px solid #dcdde1;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+        }
+        .about-text h3 {
+            margin-top: 0;
+            font-size: 24px;
+            color: #1e272e;
+        }
+        .about-text p {
+            line-height: 1.6;
+            color: #718093;
+        }
     </style>
 </head>
 <body>
@@ -185,9 +209,8 @@
 
     <div class="container">
         <div class="product-container">
-            
             <div class="product-image">
-                <img src="https://images.squarespace-cdn.com/content/v1/59ef784d017db2aa978939b4/1511211124619-N2I0SZJSVKD89WJ968Y8/C10-Placeholder.png?format=1000w" alt="C10 Integrated Plug Assembly">
+                <img src="c10-fitting.jpg" alt="1967-1972 C-10 Integrated Fitting Assembly">
             </div>
             
             <div class="product-details">
@@ -197,7 +220,7 @@
                 <p class="description">
                     Engineered custom solution replacing the traditional separate $14 plug and T-joint line assembly. 
                     Eliminates an unnecessary failure point and fits cleanly into factory configurations for 1967-1972 Chevy C-10 pickups. 
-                    3D printed locally to rigorous automotive styling standards.
+                    3D printed to rigorous automotive specifications.
                 </p>
 
                 <div class="option-group">
@@ -206,7 +229,7 @@
                         <div class="info-icon">?</div>
                         <div class="tooltip-box">
                             <strong>PETG ($10.00):</strong> Excellent chemical and chemical-fluid resistance, highly durable, easy clean finish, UV resistant. Great standard engine/cab bay choice.<br><br>
-                            <strong>ABS ($12.00):</strong> High heat deflection point, highly structural stiffness, slightly tougher drop-impact handling. Ideal for higher-temperature environments.
+                            <strong>ABS ($12.00):</strong> High heat deflection point, structural stiffness, slightly tougher drop-impact handling. Ideal for higher-temperature environments.
                         </div>
                     </div>
                     
@@ -230,7 +253,21 @@
                     Add to Cart
                 </button>
             </div>
+        </div>
 
+        <div class="about-section">
+            <div class="about-image">
+                <img src="https://via.placeholder.com/300" alt="Robert">
+            </div>
+            <div class="about-text">
+                <h3>About the Builder</h3>
+                <p>
+                    Welcome to Roberts Custom Truck Parts. With a background rooted in mechanical engineering and heavy-duty truck maintenance, I focus on solving common design oversights through custom engineering and precise manufacturing. 
+                </p>
+                <p>
+                    Every part featured here is designed, tested, and 3D printed to exact functional tolerances. By integrating multiple independent factory components into streamlined single-piece designs, these components eliminate unnecessary assembly connections and minimize potential failure points in classic automotive setups.
+                </p>
+            </div>
         </div>
     </div>
 
@@ -241,8 +278,6 @@
 
         materialSelect.addEventListener('change', (e) => {
             const chosenMaterial = e.target.value;
-            
-            // Sync UI text display price and update Snipcart custom internal choices
             if (chosenMaterial === 'ABS') {
                 priceDisplay.textContent = '$12.00';
                 buyButton.setAttribute('data-item-custom1-value', 'ABS');
