@@ -1,67 +1,173 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Free E-Commerce Store</title>
-    <!-- Simple CSS for Styling -->
+    <title>Roberts Custom Truck Parts</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f9;
-            color: #333;
+            background-color: #f5f6fa;
+            color: #2f3640;
         }
         header {
-            background-color: #1a1a24;
+            background-color: #1e272e;
             color: white;
             padding: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+            letter-spacing: 0.5px;
         }
         .cart-btn {
-            background-color: #ff4757;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-        }
-        .product-card {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            text-align: center;
-        }
-        .product-card img {
-            max-width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 4px;
-        }
-        .buy-btn {
-            background-color: #2ed573;
+            background-color: #e84118;
             color: white;
             border: none;
             padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        .cart-btn:hover {
+            background-color: #c23616;
+        }
+        .container {
+            max-width: 900px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+        .product-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+        @media (max-width: 768px) {
+            .product-container { grid-template-columns: 1fr; }
+        }
+        .product-image {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dcdde1;
+            padding: 20px;
+        }
+        .product-image img {
+            max-width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+        }
+        .product-details h2 {
+            margin-top: 0;
+            font-size: 28px;
+            color: #1e272e;
+        }
+        .price-tag {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2ed573;
+            margin: 20px 0;
+        }
+        .description {
+            line-height: 1.6;
+            color: #718093;
+            margin-bottom: 30px;
+        }
+        
+        /* Material Selector and Custom Dropdown Styles */
+        .option-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        .option-label-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .option-label {
+            font-weight: 600;
+            font-size: 14px;
+            color: #718093;
+            text-transform: uppercase;
+        }
+        
+        /* Tooltip Container */
+        .info-icon {
+            background: #718093;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: help;
+            font-weight: bold;
+        }
+        /* Tooltip Text (Hidden by default) */
+        .tooltip-box {
+            visibility: hidden;
+            width: 280px;
+            background-color: #2f3640;
+            color: #fff;
+            text-align: left;
+            border-radius: 6px;
+            padding: 12px;
+            position: absolute;
+            z-index: 10;
+            bottom: 125%;
+            left: 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: opacity 0.2s;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        .info-icon:hover + .tooltip-box {
+            visibility: visible;
+            opacity: 1;
+        }
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #dcdde1;
+            border-radius: 6px;
             font-size: 16px;
-            border-radius: 4px;
+            background-color: white;
+            color: #2f3640;
+            outline: none;
+        }
+        select:focus {
+            border-color: #1e272e;
+        }
+        .buy-btn {
+            width: 100%;
+            background-color: #2ed573;
+            color: white;
+            border: none;
+            padding: 16px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 6px;
             cursor: pointer;
             transition: background 0.2s;
+            box-shadow: 0 4px 10px rgba(46, 213, 115, 0.2);
         }
         .buy-btn:hover {
             background-color: #26af5f;
@@ -70,49 +176,57 @@
 </head>
 <body>
 
-    <!-- Header Section with Shopping Cart -->
     <header>
-        <h1>Engineered Goods</h1>
-        <!-- This button triggers the shopping cart sidebar slide-out -->
+        <h1>Roberts Custom Truck Parts</h1>
         <button class="snipcart-checkout cart-btn">
             View Cart (<span class="snipcart-items-count">0</span>)
         </button>
     </header>
 
     <div class="container">
-        <h2>Our Products</h2>
-        <div class="product-grid">
-
-            <!-- PRODUCT 1 -->
-            <div class="product-card">
-                <img src="https://via.placeholder.com/300" alt="Product One">
-                <h3>Precision Machined Widget</h3>
-                <p>High-quality aluminum component designed to exact tolerances.</p>
-                <p><strong>$45.00</strong></p>
-                <!-- Snipcart Buy Button Attributes -->
-                <button class="snipcart-add-item buy-btn"
-                    data-item-id="widget-01"
-                    data-item-name="Precision Machined Widget"
-                    data-item-price="45.00"
-                    data-item-url="/"
-                    data-item-description="High-quality aluminum component designed to exact tolerances.">
-                    Add to Cart
-                </button>
+        <div class="product-container">
+            
+            <div class="product-image">
+                <img src="https://images.squarespace-cdn.com/content/v1/59ef784d017db2aa978939b4/1511211124619-N2I0SZJSVKD89WJ968Y8/C10-Placeholder.png?format=1000w" alt="C10 Integrated Plug Assembly">
             </div>
+            
+            <div class="product-details">
+                <h2>1967-1972 Chevy C-10 Integrated Fitting Assembly</h2>
+                <div class="price-tag" id="displayed-price">$10.00</div>
+                
+                <p class="description">
+                    Engineered custom solution replacing the traditional separate $14 plug and T-joint line assembly. 
+                    Eliminates an unnecessary failure point and fits cleanly into factory configurations for 1967-1972 Chevy C-10 pickups. 
+                    3D printed locally to rigorous automotive styling standards.
+                </p>
 
-            <!-- PRODUCT 2 -->
-            <div class="product-card">
-                <img src="https://via.placeholder.com/300" alt="Product Two">
-                <h3>Custom Custom Assembly Fixture</h3>
-                <p>Heavy-duty alignment tooling fixture for bench manufacturing.</p>
-                <p><strong>$120.00</strong></p>
-                <!-- Snipcart Buy Button Attributes -->
+                <div class="option-group">
+                    <div class="option-label-wrapper">
+                        <span class="option-label">Select Print Filament</span>
+                        <div class="info-icon">?</div>
+                        <div class="tooltip-box">
+                            <strong>PETG ($10.00):</strong> Excellent chemical and chemical-fluid resistance, highly durable, easy clean finish, UV resistant. Great standard engine/cab bay choice.<br><br>
+                            <strong>ABS ($12.00):</strong> High heat deflection point, highly structural stiffness, slightly tougher drop-impact handling. Ideal for higher-temperature environments.
+                        </div>
+                    </div>
+                    
+                    <select id="material-select">
+                        <option value="PETG">PETG (Standard) — $10.00</option>
+                        <option value="ABS">ABS (High-Temp) — $12.00</option>
+                    </select>
+                </div>
+
                 <button class="snipcart-add-item buy-btn"
-                    data-item-id="fixture-02"
-                    data-item-name="Custom Assembly Fixture"
-                    data-item-price="120.00"
+                    id="buy-button"
+                    data-item-id="c10-integrated-fitting"
+                    data-item-name="1967-1972 C-10 Integrated Fitting"
+                    data-item-price="10.00"
                     data-item-url="/"
-                    data-item-description="Heavy-duty alignment tooling fixture for bench manufacturing.">
+                    data-item-weight="150"
+                    data-item-description="Custom functional fitting assembly designed specifically for 1967-1972 C-10 trucks."
+                    data-item-custom1-name="Filament Material"
+                    data-item-custom1-options="PETG|ABS[+2.00]"
+                    data-item-custom1-value="PETG">
                     Add to Cart
                 </button>
             </div>
@@ -120,11 +234,31 @@
         </div>
     </div>
 
-    <!-- SNIPCART INJECTION INSTRUCTIONS:
-         Replace "YOUR_PUBLIC_API_KEY" below with the actual key from your Snipcart dashboard. -->
+    <script>
+        const materialSelect = document.getElementById('material-select');
+        const buyButton = document.getElementById('buy-button');
+        const priceDisplay = document.getElementById('displayed-price');
+
+        materialSelect.addEventListener('change', (e) => {
+            const chosenMaterial = e.target.value;
+            
+            // Sync UI text display price and update Snipcart custom internal choices
+            if (chosenMaterial === 'ABS') {
+                priceDisplay.textContent = '$12.00';
+                buyButton.setAttribute('data-item-custom1-value', 'ABS');
+            } else {
+                priceDisplay.textContent = '$10.00';
+                buyButton.setAttribute('data-item-custom1-value', 'PETG');
+            }
+        });
+    </script>
+
     <script>
         window.SnipcartSettings = {
-            publicApiKey: YWU4NDkwZTMtYWI0MC00NjczLThjMzYtMWQ5MjJiOWZlYzkyNjM5MTUzMzc5MjEzMzQ3NzM0,
+            publicApiKey: "YOUR_PUBLIC_API_KEY",
             loadStrategy: "on-user-interaction",
         };
-        (function(){var c,d;(d=(c=window.SnipcartSettings).version)!=null||(c.version="3.0");var s,S;(S=(s=window.SnipcartSettings).timeoutDuration)!=null||(s.timeoutDuration=2750);var l,p;(p=(l=window.SnipcartSettings).domain)!=null||(l.domain="cdn.snipcart.com");var w,u;(u=(w=window.SnipcartSettings).protocol)!=null||(w.protocol="https");var m,g;(g=(m=window.SnipcartSettings).loadCSS)!=null||(m.loadCSS=!0);var y=window.SnipcartSettings.version.includes("v3.0.0-ci")||window.SnipcartSettings.version!="3.0"&&window.SnipcartSettings.version.localeCompare("3.4.0",void 0,{numeric:!0,sensitivity:"base"})===-1,f=["focus","mouseover","touchmove","scroll","keydown"];window.LoadSnipcart=o;document.readyState==="loading"?document.addEventListener("DOMContentLoaded",r):r();function r(){window.SnipcartSettings.loadStrategy?window.SnipcartSettings.loadStrategy==="on-user-interaction"Normally I can help with things like this, but I don't seem to have access to that content. You can try again or ask me for something else.
+        (function(){var c,d;(d=(c=window.SnipcartSettings).version)!=null||(c.version="3.0");var s,S;(S=(s=window.SnipcartSettings).timeoutDuration)!=null||(s.timeoutDuration=2750);var l,p;(p=(l=window.SnipcartSettings).domain)!=null||(l.domain="cdn.snipcart.com");var w,u;(u=(w=window.SnipcartSettings).protocol)!=null||(w.protocol="https");var m,g;(g=(m=window.SnipcartSettings).loadCSS)!=null||(m.loadCSS=!0);var y=window.SnipcartSettings.version.includes("v3.0.0-ci")||window.SnipcartSettings.version!="3.0"&&window.SnipcartSettings.version.localeCompare("3.4.0",void 0,{numeric:!0,sensitivity:"base"})===-1,f=["focus","mouseover","touchmove","scroll","keydown"];window.LoadSnipcart=o;document.readyState==="loading"?document.addEventListener("DOMContentLoaded",r):r();function r(){window.SnipcartSettings.loadStrategy?window.SnipcartSettings.loadStrategy==="on-user-interaction"&&f.forEach(function(e){document.addEventListener(e,e===f[0]?a:n)}):o()}function a(e){if(e.target.tagName==="INPUT"&&e.target.type==="text")return;n(e)}function n(e){f.forEach(function(t){document.removeEventListener(t,e.target.tagName==="INPUT"&&e.target.type==="text"?a:n)}),o()}function o(){if(window.Snipcart){document.dispatchEvent(new CustomEvent("snipcart.loaded"));return}var e=document.createElement("script"),t=document.createElement("link");t.rel="stylesheet",t.type="text/css",t.href=u+"://"+p+"/themes/v"+window.SnipcartSettings.version+"/default/snipcart.css",g&&document.head.appendChild(t),e.src=u+"://"+p+"/scripts/v"+window.SnipcartSettings.version+"/snipcart.js",e.async=!0,document.body.appendChild(e)}})();
+    </script>
+</body>
+</html>
