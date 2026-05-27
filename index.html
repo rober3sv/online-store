@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roberts Custom Truck Parts</title>
+    <title>Roberts Custom Truck Parts - Home</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -17,254 +17,210 @@
             color: white;
             padding: 20px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: relative;
         }
         header h1 {
             margin: 0;
             font-size: 24px;
             letter-spacing: 0.5px;
+            flex-grow: 1;
+            text-align: center;
         }
-        nav {
+        
+        /* Hamburger Menu Icon */
+        .menu-toggle {
             display: flex;
-            align-items: center;
-            gap: 25px;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 24px;
+            height: 18px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            z-index: 100;
         }
-        nav a {
+        .menu-toggle span {
+            width: 100%;
+            height: 3px;
+            background-color: white;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+        
+        /* Sliding Sidebar Nav */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100%;
+            background-color: #1e272e;
+            box-shadow: 4px 0 15px rgba(0,0,0,0.2);
+            z-index: 99;
+            transition: left 0.3s ease;
+            padding-top: 80px;
+            box-sizing: border-box;
+        }
+        .sidebar.active {
+            left: 0;
+        }
+        .sidebar a {
+            display: block;
             color: #dcdde1;
             text-decoration: none;
+            padding: 15px 30px;
+            font-size: 18px;
             font-weight: 600;
-            font-size: 16px;
-            transition: color 0.2s;
+            border-left: 4px solid transparent;
+            transition: all 0.2s;
         }
-        nav a:hover {
+        .sidebar a:hover, .sidebar a.active-link {
             color: white;
+            background-color: #2f3640;
+            border-left-color: #e84118;
         }
         .cart-btn {
             background-color: #e84118;
             color: white;
             border: none;
-            padding: 12px 24px;
+            padding: 10px 20px;
             border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
             transition: background 0.2s;
         }
-        .cart-btn:hover {
-            background-color: #c23616;
+        .cart-btn:hover { background-color: #c23616; }
+
+        .hero-section {
+            background: linear-gradient(rgba(30, 39, 46, 0.85), rgba(30, 39, 46, 0.95)), url('https://images.squarespace-cdn.com/content/v1/59ef784d017db2aa978939b4/1511211124619-N2I0SZJSVKD89WJ968Y8/C10-Placeholder.png?format=1000w') no-repeat center center/cover;
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+            border-bottom: 4px solid #e84118;
         }
-        .container {
-            max-width: 900px;
-            margin: 60px auto;
-            padding: 0 20px;
-        }
-        .product-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-        }
-        @media (max-width: 768px) {
-            .product-container { grid-template-columns: 1fr; }
-        }
-        .product-image {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border: 1px solid #dcdde1;
-            padding: 20px;
-        }
-        .product-image img {
-            max-width: 100%;
-            max-height: 400px;
-            object-fit: contain;
-            border-radius: 4px;
-        }
-        .product-details h2 {
-            margin-top: 0;
-            font-size: 28px;
+        .hero-section h2 { font-size: 36px; margin-bottom: 15px; }
+        .hero-section p { font-size: 18px; color: #dcdde1; max-width: 600px; margin: 0 auto; line-height: 1.6; }
+
+        .container { max-width: 900px; margin: 50px auto; padding: 0 20px; }
+        
+        .section-title {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             color: #1e272e;
         }
-        .price-tag {
-            font-size: 24px;
-            font-weight: bold;
-            color: #2ed573;
-            margin: 20px 0;
+
+        /* Clickable Showcase Card Link */
+        .featured-product-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
         }
-        .description {
-            line-height: 1.6;
-            color: #718093;
-            margin-bottom: 30px;
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: 1px solid transparent;
         }
-        .option-group {
-            margin-bottom: 25px;
-            position: relative;
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border-color: #dcdde1;
         }
-        .option-label-wrapper {
+        @media (max-width: 768px) {
+            .product-card { grid-template-columns: 1fr; }
+        }
+        .card-img-wrapper {
+            background: #f8f9fa;
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-        .option-label {
-            font-weight: 600;
-            font-size: 14px;
-            color: #718093;
-            text-transform: uppercase;
-        }
-        .info-icon {
-            background: #718093;
-            color: white;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            font-size: 12px;
-            display: inline-flex;
-            align-items: center;
             justify-content: center;
-            cursor: help;
-            font-weight: bold;
+            padding: 30px;
         }
-        .tooltip-box {
-            visibility: hidden;
-            width: 280px;
-            background-color: #2f3640;
-            color: #fff;
-            text-align: left;
-            border-radius: 6px;
-            padding: 12px;
-            position: absolute;
-            z-index: 10;
-            bottom: 125%;
-            left: 0;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            opacity: 0;
-            transition: opacity 0.2s;
-            font-size: 13px;
-            line-height: 1.4;
+        .card-img-wrapper img {
+            max-width: 100%;
+            height: auto;
+            max-height: 250px;
+            object-fit: contain;
         }
-        .info-icon:hover + .tooltip-box {
-            visibility: visible;
-            opacity: 1;
+        .card-info {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
-        select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #dcdde1;
-            border-radius: 6px;
-            font-size: 16px;
-            background-color: white;
-            color: #2f3640;
-            outline: none;
-        }
-        .buy-btn {
-            width: 100%;
+        .card-info h3 { margin-top: 0; font-size: 22px; color: #1e272e; }
+        .card-info p { line-height: 1.6; color: #718093; margin: 15px 0; }
+        .badge {
             background-color: #2ed573;
             color: white;
-            border: none;
-            padding: 16px;
-            font-size: 18px;
+            padding: 6px 12px;
             font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.2s;
-            box-shadow: 0 4px 10px rgba(46, 213, 115, 0.2);
-        }
-        .buy-btn:hover {
-            background-color: #26af5f;
+            font-size: 12px;
+            border-radius: 4px;
+            align-self: flex-start;
+            text-transform: uppercase;
         }
     </style>
 </head>
 <body>
 
     <header>
+        <button class="menu-toggle" onclick="toggleMenu()" aria-label="Toggle Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
         <h1>Roberts Custom Truck Parts</h1>
-        <nav>
-            <a href="index.html">Shop</a>
-            <a href="about.html">About Me</a>
-            <button class="snipcart-checkout cart-btn">
-                View Cart (<span class="snipcart-items-count">0</span>)
-            </button>
-        </nav>
+        <button class="snipcart-checkout cart-btn">Cart (<span class="snipcart-items-count">0</span>)</button>
     </header>
 
+    <nav class="sidebar" id="sidebarMenu">
+        <a href="index.html" class="active-link">Home Overview</a>
+        <a href="product.html">Shop Parts</a>
+        <a href="why-us.html">Why Choose Us?</a>
+        <a href="about.html">About the Builder</a>
+    </nav>
+
+    <section class="hero-section">
+        <h2>Custom Engineering for Classic Trucks</h2>
+        <p>Dedicated to optimizing and manufacturing flawless custom structural components specifically tailored for 1967 - 1972 Chevy C-10 pickups.</p>
+    </section>
+
     <div class="container">
-        <div class="product-container">
-            <div class="product-image">
-                <img src="c10-fitting.jpg" alt="1967-1972 C-10 Integrated Fitting Assembly">
-            </div>
-            
-            <div class="product-details">
-                <h2>1967-1972 Chevy C-10 Integrated Fitting Assembly</h2>
-                <div class="price-tag" id="displayed-price">$10.00</div>
-                
-                <p class="description">
-                    Engineered custom solution replacing the traditional separate $14 plug and T-joint line assembly. 
-                    Eliminates an unnecessary failure point and fits cleanly into factory configurations for 1967-1972 Chevy C-10 pickups. 
-                    3D printed to rigorous automotive specifications.
-                </p>
-
-                <div class="option-group">
-                    <div class="option-label-wrapper">
-                        <span class="option-label">Select Print Filament</span>
-                        <div class="info-icon">?</div>
-                        <div class="tooltip-box">
-                            <strong>PETG ($10.00):</strong> Excellent chemical and chemical-fluid resistance, highly durable, easy clean finish, UV resistant. Great standard engine/cab bay choice.<br><br>
-                            <strong>ABS ($12.00):</strong> High heat deflection point, structural stiffness, slightly tougher drop-impact handling. Ideal for higher-temperature environments.
-                        </div>
-                    </div>
-                    
-                    <select id="material-select">
-                        <option value="PETG">PETG (Standard) — $10.00</option>
-                        <option value="ABS">ABS (High-Temp) — $12.00</option>
-                    </select>
+        <h2 class="section-title">Featured Assemblies</h2>
+        
+        <a href="product.html" class="featured-product-link">
+            <div class="product-card">
+                <div class="card-img-wrapper">
+                    <img src="c10-fitting.jpg" alt="1967-1972 C-10 Integrated Fitting Assembly">
                 </div>
-
-                <button class="snipcart-add-item buy-btn"
-                    id="buy-button"
-                    data-item-id="c10-integrated-fitting"
-                    data-item-name="1967-1972 C-10 Integrated Fitting"
-                    data-item-price="10.00"
-                    data-item-url="/"
-                    data-item-weight="150"
-                    data-item-description="Custom functional fitting assembly designed specifically for 1967-1972 C-10 trucks."
-                    data-item-custom1-name="Filament Material"
-                    data-item-custom1-options="PETG|ABS[+2.00]"
-                    data-item-custom1-value="PETG">
-                    Add to Cart
-                </button>
+                <div class="card-info">
+                    <span class="badge">Available Now</span>
+                    <h3>1967-1972 Chevy C-10 Integrated Fitting Assembly</h3>
+                    <p>Replaces the traditional multi-piece $14 plug and T-joint configuration with a singular, solid component. Eliminates fluid assembly leakage hazards seamlessly.</p>
+                    <span style="font-weight: bold; color: #2ed573; font-size: 18px;">From $10.00 →</span>
+                </div>
             </div>
-        </div>
+        </a>
     </div>
 
     <script>
-        const materialSelect = document.getElementById('material-select');
-        const buyButton = document.getElementById('buy-button');
-        const priceDisplay = document.getElementById('displayed-price');
-
-        materialSelect.addEventListener('change', (e) => {
-            const chosenMaterial = e.target.value;
-            if (chosenMaterial === 'ABS') {
-                priceDisplay.textContent = '$12.00';
-                buyButton.setAttribute('data-item-custom1-value', 'ABS');
-            } else {
-                priceDisplay.textContent = '$10.00';
-                buyButton.setAttribute('data-item-custom1-value', 'PETG');
-            }
-        });
+        function toggleMenu() {
+            document.getElementById('sidebarMenu').classList.toggle('active');
+        }
     </script>
-
     <script>
-        window.SnipcartSettings = {
-            publicApiKey: "YWU4NDkwZTMtYWI0MC00NjczLThjMzYtMWQ5MjJiOWZlYzkyNjM5MTUzMzc5MjEzMzQ3NzM0",
-            loadStrategy: "on-user-interaction",
-        };
+        window.SnipcartSettings = { publicApiKey: "YWU4NDkwZTMtYWI0MC00NjczLThjMzYtMWQ5MjJiOWZlYzkyNjM5MTUzMzc5MjEzMzQ3NzM0", loadStrategy: "on-user-interaction" };
         (function(){var c,d;(d=(c=window.SnipcartSettings).version)!=null||(c.version="3.0");var s,S;(S=(s=window.SnipcartSettings).timeoutDuration)!=null||(s.timeoutDuration=2750);var l,p;(p=(l=window.SnipcartSettings).domain)!=null||(l.domain="cdn.snipcart.com");var w,u;(u=(w=window.SnipcartSettings).protocol)!=null||(w.protocol="https");var m,g;(g=(m=window.SnipcartSettings).loadCSS)!=null||(m.loadCSS=!0);var y=window.SnipcartSettings.version.includes("v3.0.0-ci")||window.SnipcartSettings.version!="3.0"&&window.SnipcartSettings.version.localeCompare("3.4.0",void 0,{numeric:!0,sensitivity:"base"})===-1,f=["focus","mouseover","touchmove","scroll","keydown"];window.LoadSnipcart=o;document.readyState==="loading"?document.addEventListener("DOMContentLoaded",r):r();function r(){window.SnipcartSettings.loadStrategy?window.SnipcartSettings.loadStrategy==="on-user-interaction"&&f.forEach(function(e){document.addEventListener(e,e===f[0]?a:n)}):o()}function a(e){if(e.target.tagName==="INPUT"&&e.target.type==="text")return;n(e)}function n(e){f.forEach(function(t){document.removeEventListener(t,e.target.tagName==="INPUT"&&e.target.type==="text"?a:n)}),o()}function o(){if(window.Snipcart){document.dispatchEvent(new CustomEvent("snipcart.loaded"));return}var e=document.createElement("script"),t=document.createElement("link");t.rel="stylesheet",t.type="text/css",t.href=u+"://"+p+"/themes/v"+window.SnipcartSettings.version+"/default/snipcart.css",g&&document.head.appendChild(t),e.src=u+"://"+p+"/scripts/v"+window.SnipcartSettings.version+"/snipcart.js",e.async=!0,document.body.appendChild(e)}})();
     </script>
 </body>
