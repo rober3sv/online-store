@@ -1,4 +1,4 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -15,6 +15,8 @@
             flex-direction: column;
             min-height: 100vh;
         }
+        
+        /* Sticky Locked Header */
         header {
             background-color: #1e272e;
             color: white;
@@ -23,7 +25,9 @@
             align-items: center;
             justify-content: space-between;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: relative;
+            position: sticky; /* Keeps it locked at the top */
+            top: 0;
+            z-index: 1000; /* Ensures it stays on top of all content */
         }
         header h1 {
             margin: 0;
@@ -33,27 +37,27 @@
             text-align: center;
         }
         
-        /* Widened Hamburger Menu Icon */
         .menu-toggle {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            width: 32px; /* Increased from 24px */
-            height: 22px; /* Increased from 18px */
+            width: 32px;
+            height: 22px;
             background: transparent;
             border: none;
             cursor: pointer;
-            z-index: 100;
+            z-index: 1001;
             padding: 0;
         }
         .menu-toggle span {
             width: 100%;
-            height: 4px; /* Thicker bars */
+            height: 4px;
             background-color: white;
             border-radius: 2px;
             transition: all 0.3s ease;
         }
         
+        /* Sidebar adjusted to slide out cleanly right under/beside sticky header */
         .sidebar {
             position: fixed;
             top: 0;
@@ -62,9 +66,9 @@
             height: 100%;
             background-color: #1e272e;
             box-shadow: 4px 0 15px rgba(0,0,0,0.2);
-            z-index: 99;
+            z-index: 999;
             transition: left 0.3s ease;
-            padding-top: 80px;
+            padding-top: 85px; /* Pushes links down below the header line */
             box-sizing: border-box;
         }
         .sidebar.active { left: 0; }
@@ -140,7 +144,6 @@
         .card-info p { line-height: 1.6; color: #718093; margin: 15px 0; }
         .badge { background-color: #2ed573; color: white; padding: 6px 12px; font-weight: bold; font-size: 12px; border-radius: 4px; align-self: flex-start; text-transform: uppercase; }
 
-        /* Global Footer Component */
         footer {
             background-color: #1e272e;
             color: #dcdde1;
@@ -196,7 +199,7 @@
     </div>
 
     <footer>
-        <p>Need Help? Have a Special Request? Contact Me Here: <a href="mailto:seanrobertscontactparts@gmail.com">seanrobertscontactparts@gmail.com</a></p>
+        <p>Need Help? Have a Custome Request? Contact Me Here: <a href="mailto:seanrobertscontactparts@gmail.com">seanrobertscontactparts@gmail.com</a></p>
         <p style="font-size: 13px; color: #718093; margin-top: 15px;">&copy; 2026 Roberts Custom Truck Parts. All Rights Reserved.</p>
     </footer>
 
