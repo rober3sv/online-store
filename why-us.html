@@ -100,5 +100,9 @@
     </footer>
 
     <script>function toggleMenu() { document.getElementById('sidebarMenu').classList.toggle('active'); }</script>
+    <script>
+        window.SnipcartSettings = { publicApiKey: "YWU4NDkwZTMtYWI0MC00NjczLThjMzYtMWQ5MjJiOWZlYzkyNjM5MTUzMzc5MjEzMzQ3NzM0", loadStrategy: "on-user-interaction" };
+        (function(){var c,d;(d=(c=window.SnipcartSettings).version)!=null||(c.version="3.0");var s,S;(S=(s=window.SnipcartSettings).timeoutDuration)!=null||(s.timeoutDuration=2750);var l,p;(p=(l=window.SnipcartSettings).domain)!=null||(l.domain="cdn.snipcart.com");var w,u;(u=(w=window.SnipcartSettings).protocol)!=null||(w.protocol="https");var m,g;(g=(m=window.SnipcartSettings).loadCSS)!=null||(m.loadCSS=!0);var y=window.SnipcartSettings.version.includes("v3.0.0-ci")||window.SnipcartSettings.version!="3.0"&&window.SnipcartSettings.version.localeCompare("3.4.0",void 0,{numeric:!0,sensitivity:"base"})===-1,f=["focus","mouseover","touchmove","scroll","keydown"];window.LoadSnipcart=o;document.readyState==="loading"?document.addEventListener("DOMContentLoaded",r):r();function r(){window.SnipcartSettings.loadStrategy?window.SnipcartSettings.loadStrategy==="on-user-interaction"&&f.forEach(function(e){document.addEventListener(e,e===f[0]?a:n)}):o()}function a(e){if(e.target.tagName==="INPUT"&&e.target.type==="text")return;n(e)}function n(e){f.forEach(function(t){document.removeEventListener(t,e.target.tagName==="INPUT"&&e.target.type==="text"?a:n)}),o()}function o(){if(window.Snipcart){document.dispatchEvent(new CustomEvent("snipcart.loaded"));return}var e=document.createElement("script"),t=document.createElement("link");t.rel="stylesheet",t.type="text/css",t.href=u+"://"+p+"/themes/v"+window.SnipcartSettings.version+"/default/snipcart.css",g&&document.head.appendChild(t),e.src=u+"://"+p+"/scripts/v"+window.SnipcartSettings.version+"/snipcart.js",e.async=!0,document.body.appendChild(e)}})();
+    </script>
 </body>
 </html>
