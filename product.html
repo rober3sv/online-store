@@ -127,14 +127,35 @@
         <p style="font-size: 13px; color: #718093; margin-top: 15px;">&copy; 2026 Roberts Custom Truck Parts. All Rights Reserved.</p>
     </footer>
 
-    <script>
-        function toggleMenu() { document.getElementById('sidebarMenu').classList.toggle('active'); }
+   <script>
+        function toggleMenu() { 
+            document.getElementById('sidebarMenu').classList.toggle('active'); 
+        }
+
+        // Close sidebar when clicking anywhere outside of it
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebarMenu');
+            const toggleBtn = document.querySelector('.menu-toggle');
+            
+            if (sidebar && sidebar.classList.contains('active')) {
+                if (!sidebar.contains(event.target) && !toggleBtn.contains(event.target)) {
+                    sidebar.classList.remove('active');
+                }
+            }
+        });
+
+        // Your existing Filament pricing selector logic
         const select = document.getElementById('material-select');
         const btn = document.getElementById('buy-button');
         const display = document.getElementById('displayed-price');
         select.addEventListener('change', (e) => {
-            if (e.target.value === 'ABS') { display.textContent = '$20.00'; btn.setAttribute('data-item-custom1-value', 'ABS'); }
-            else { display.textContent = '$15.00'; btn.setAttribute('data-item-custom1-value', 'PETG'); }
+            if (e.target.value === 'ABS') { 
+                display.textContent = '$20.00'; 
+                btn.setAttribute('data-item-custom1-value', 'ABS'); 
+            } else { 
+                display.textContent = '$15.00'; 
+                btn.setAttribute('data-item-custom1-value', 'PETG'); 
+            }
         });
     </script>
     <script>
