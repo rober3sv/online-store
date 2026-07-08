@@ -62,6 +62,56 @@
         footer p { margin: 5px 0; }
         footer a { color: #2ed573; text-decoration: none; font-weight: 600; transition: color 0.2s; }
         footer a:hover { color: #26af5f; text-decoration: underline; }
+
+        /* Custom Cart Drawer UI Styles */
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -340px;
+            width: 340px;
+            max-width: 100%;
+            height: 100%;
+            background-color: white;
+            box-shadow: -4px 0 15px rgba(0,0,0,0.2);
+            z-index: 1001;
+            transition: right 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+        }
+        .cart-sidebar.active { right: 0; }
+        .cart-header {
+            background-color: #1e272e;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .cart-header h2 { margin: 0; font-size: 20px; }
+        .close-cart { background: transparent; border: none; color: white; font-size: 24px; cursor: pointer; }
+        .cart-body { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; }
+        #cartItemsList { flex: 1; overflow-y: auto; margin-bottom: 20px; }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #f5f6fa;
+            padding-bottom: 15px;
+        }
+        .cart-item-details h4 { margin: 0 0 5px 0; color: #1e272e; font-size: 15px; }
+        .cart-item-details p { margin: 0; color: #718093; font-size: 13px; }
+        .cart-item-remove { background: transparent; border: none; color: #e84118; cursor: pointer; font-weight: bold; font-size: 13px; }
+        .cart-totals { background-color: #f5f6fa; padding: 15px; border-radius: 8px; }
+        .cart-totals p { display: flex; justify-content: space-between; margin: 5px 0; font-size: 14px; color: #2f3640; }
+        .cart-totals p.grand-total { font-weight: bold; font-size: 16px; color: #1e272e; border-top: 1px solid #dcdde1; padding-top: 8px; margin-top: 8px; }
+        .checkout-form { margin-top: 25px; display: flex; flex-direction: column; gap: 12px; border-top: 2px dashed #dcdde1; padding-top: 20px; }
+        .checkout-form h3 { margin: 0 0 5px 0; font-size: 16px; color: #1e272e; }
+        .checkout-form input { padding: 12px; border: 2px solid #dcdde1; border-radius: 6px; font-size: 14px; background-color: white; color: #2f3640; outline: none; }
+        .checkout-form input:focus { border-color: #e84118; }
+        .checkout-btn { background-color: #2ed573; color: white; border: none; padding: 14px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; text-align: center; transition: background 0.2s; box-shadow: 0 4px 10px rgba(46, 213, 115, 0.2); }
+        .checkout-btn:hover { background-color: #26af5f; }
     </style>
 </head>
 <body>
@@ -71,7 +121,7 @@
             <span></span><span></span><span></span>
         </button>
         <h1>Roberts Custom Truck Parts</h1>
-        <button class="snipcart-checkout cart-btn">Cart (<span class="snipcart-items-count">0</span>)</button>
+        <button class="cart-btn" onclick="toggleCart()">Cart (<span id="cartCount">0</span>)</button>
     </header>
 
     <nav class="sidebar" id="sidebarMenu">
@@ -80,6 +130,29 @@
         <a href="why-us.html">Why Choose Us?</a>
         <a href="about.html">About the Builder</a>
     </nav>
+
+    <!-- Right Slide-out Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h2>Your Shopping Cart</h2>
+            <button class="close-cart" onclick="toggleCart()">&times;</button>
+        </div>
+        <div class="cart-body">
+            <div id="cartItemsList"></div>
+            <div class="cart-totals">
+                <p>Subtotal: <span id="cartSubtotal">$0.00</span></p>
+                <p>Shipping & Handling: <span>$10.00</span></p>
+                <p class="grand-total">Grand Total: <span id="cartGrandTotal">$0.00</span></p>
+            </div>
+            <form class="checkout-form" id="checkoutForm">
+                <h3>Shipping & Payment Details</h3>
+                <input type="text" id="custName" placeholder="Full Name" required>
+                <input type="text" id="custAddress" placeholder="Full Shipping Address" required>
+                <input type="email" id="custEmail" placeholder="Email Address" required>
+                <button type="submit" class="checkout-btn">Submit Order & Pay via Venmo</button>
+            </form>
+        </div>
+    </div>
 
     <div class="container">
         <div class="product-container">
@@ -106,16 +179,7 @@
                     </select>
                 </div>
 
-                <button class="snipcart-add-item buy-btn" id="buy-button"
-                    data-item-id="c10-integrated-fitting"
-                    data-item-name="1967-1972 C-10 Integrated Fitting"
-                    data-item-price="15.00"
-                    data-item-url="/product.html"
-                    data-item-weight="150"
-                    data-item-description="Custom component for 1967-1972 C-10 assemblies."
-                    data-item-custom1-name="Filament Material"
-                    data-item-custom1-options="PETG|ABS[+5.00]"
-                    data-item-custom1-value="PETG">
+                <button class="buy-btn" id="buy-button">
                     Add to Cart
                 </button>
             </div>
@@ -132,38 +196,160 @@
             document.getElementById('sidebarMenu').classList.toggle('active'); 
         }
 
-        // Close sidebar when clicking anywhere outside of it
+        // Shared Shopping Cart Engine Engine
+        let cart = JSON.parse(localStorage.getItem('truck_parts_cart')) || [];
+
+        function toggleCart() {
+            document.getElementById('cartSidebar').classList.toggle('active');
+        }
+
+        function updateCartUI() {
+            const list = document.getElementById('cartItemsList');
+            const countSpan = document.getElementById('cartCount');
+            const checkoutForm = document.getElementById('checkoutForm');
+            if(!list || !countSpan) return;
+
+            list.innerHTML = '';
+            let subtotal = 0;
+            let totalItems = 0;
+
+            cart.forEach((item, index) => {
+                subtotal += item.price * item.quantity;
+                totalItems += item.quantity;
+
+                const li = document.createElement('div');
+                li.className = 'cart-item';
+                li.innerHTML = `
+                    <div class="cart-item-details">
+                        <h4>${item.name}</h4>
+                        <p>Filament: ${item.material} | Qty: ${item.quantity}</p>
+                        <p style="font-weight:600; color:#2ed573; margin-top:3px;">$${(item.price * item.quantity).toFixed(2)}</p>
+                    </div>
+                    <button class="cart-item-remove" onclick="removeFromCart(${index})">Remove</button>
+                `;
+                list.appendChild(li);
+            });
+
+            countSpan.innerText = totalItems;
+            const subtotalEl = document.getElementById('cartSubtotal');
+            const grandTotalEl = document.getElementById('cartGrandTotal');
+            
+            if (subtotalEl && grandTotalEl) {
+                subtotalEl.innerText = `$${subtotal.toFixed(2)}`;
+                const grandTotal = subtotal > 0 ? subtotal + 10 : 0;
+                grandTotalEl.innerText = `$${grandTotal.toFixed(2)}`;
+            }
+
+            if(checkoutForm) {
+                if(cart.length === 0) {
+                    checkoutForm.style.display = 'none';
+                    list.innerHTML = '<p style="text-align:center; color:#718093; margin-top:40px;">Your cart is empty.</p>';
+                } else {
+                    checkoutForm.style.display = 'flex';
+                }
+            }
+            localStorage.setItem('truck_parts_cart', JSON.stringify(cart));
+        }
+
+        function addToCart(name, price, material) {
+            const existing = cart.find(item => item.name === name && item.material === material);
+            if (existing) {
+                existing.quantity += 1;
+            } else {
+                cart.push({ name, price: parseFloat(price), material, quantity: 1 });
+            }
+            updateCartUI();
+            document.getElementById('cartSidebar').classList.add('active');
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function handleCheckout(event) {
+            event.preventDefault();
+            if (cart.length === 0) return;
+
+            const name = document.getElementById('custName').value;
+            const address = document.getElementById('custAddress').value;
+            const email = document.getElementById('custEmail').value;
+
+            let subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            let grandTotal = subtotal + 10;
+
+            let emailBody = `NEW ORDER DETAILS:\n`;
+            emailBody += `Name: ${name}\n`;
+            emailBody += `Shipping Address: ${address}\n`;
+            emailBody += `Email: ${email}\n\n`;
+            emailBody += `ITEMS ORDERED:\n`;
+            cart.forEach(item => {
+                emailBody += `- ${item.name} (${item.material}) x${item.quantity} : $${(item.price * item.quantity).toFixed(2)}\n`;
+            });
+            emailBody += `\nSubtotal: $${subtotal.toFixed(2)}\n`;
+            emailBody += `Shipping & Handling: $10.00\n`;
+            emailBody += `Grand Total: $${grandTotal.toFixed(2)}\n`;
+
+            const mailtoLink = `mailto:seanrobertscontactparts@gmail.com?subject=${encodeURIComponent('New Order - ' + name)}&body=${encodeURIComponent(emailBody)}`;
+            
+            const venmoUser = "robertscustomparts"; 
+            const venmoNote = `Roberts Truck Parts Order - ${name}`;
+            const venmoLink = `https://venmo.com/${venmoUser}?txn=pay&amount=${grandTotal.toFixed(2)}&note=${encodeURIComponent(venmoNote)}`;
+
+            cart = [];
+            updateCartUI();
+            document.getElementById('cartSidebar').classList.remove('active');
+            document.getElementById('checkoutForm').reset();
+
+            window.location.href = mailtoLink;
+            setTimeout(() => {
+                window.open(venmoLink, '_blank');
+            }, 1000);
+        }
+
         document.addEventListener('click', function(event) {
             const sidebar = document.getElementById('sidebarMenu');
             const toggleBtn = document.querySelector('.menu-toggle');
+            const cartSidebar = document.getElementById('cartSidebar');
+            const cartBtn = document.querySelector('.cart-btn');
             
             if (sidebar && sidebar.classList.contains('active')) {
                 if (!sidebar.contains(event.target) && !toggleBtn.contains(event.target)) {
                     sidebar.classList.remove('active');
                 }
             }
+            if (cartSidebar && cartSidebar.classList.contains('active')) {
+                if (!cartSidebar.contains(event.target) && !cartBtn.contains(event.target) && !event.target.classList.contains('cart-item-remove')) {
+                    cartSidebar.classList.remove('active');
+                }
+            }
         });
 
-        // Your existing Filament pricing selector logic
+        // Specific Custom Product Add Event Listener Integration
         const select = document.getElementById('material-select');
         const btn = document.getElementById('buy-button');
         const display = document.getElementById('displayed-price');
+        
+        btn.addEventListener('click', () => {
+            const material = select.value;
+            const price = material === 'ABS' ? 20.00 : 15.00;
+            const productName = "1967-1972 C-10 Integrated Fitting";
+            addToCart(productName, price, material);
+        });
+
         select.addEventListener('change', (e) => {
             if (e.target.value === 'ABS') { 
                 display.textContent = '$20.00'; 
-                btn.setAttribute('data-item-custom1-value', 'ABS'); 
             } else { 
                 display.textContent = '$15.00'; 
-                btn.setAttribute('data-item-custom1-value', 'PETG'); 
             }
         });
-    </script>
-    <script>
-        window.SnipcartSettings = {
-            publicApiKey: "YWU4NDkwZTMtYWI0MC00NjczLThjMzYtMWQ5MjJiOWZlYzkyNjM5MTUzMzc5MjEzMzQ3NzM0",
-            loadStrategy: "on-user-interaction",
-        };
-        (function(){var c,d;(d=(c=window.SnipcartSettings).version)!=null||(c.version="3.0");var s,S;(S=(s=window.SnipcartSettings).timeoutDuration)!=null||(s.timeoutDuration=2750);var l,p;(p=(l=window.SnipcartSettings).domain)!=null||(l.domain="cdn.snipcart.com");var w,u;(u=(w=window.SnipcartSettings).protocol)!=null||(w.protocol="https");var m,g;(g=(m=window.SnipcartSettings).loadCSS)!=null||(m.loadCSS=!0);var y=window.SnipcartSettings.version.includes("v3.0.0-ci")||window.SnipcartSettings.version!="3.0"&&window.SnipcartSettings.version.localeCompare("3.4.0",void 0,{numeric:!0,sensitivity:"base"})===-1,f=["focus","mouseover","touchmove","scroll","keydown"];window.LoadSnipcart=o;document.readyState==="loading"?document.addEventListener("DOMContentLoaded",r):r();function r(){window.SnipcartSettings.loadStrategy?window.SnipcartSettings.loadStrategy==="on-user-interaction"&&(f.forEach(function(t){return document.addEventListener(t,o)}),setTimeout(o,window.SnipcartSettings.timeoutDuration)):o()}var a=!1;function o(){if(a)return;a=!0;let t=document.getElementsByTagName("head")[0],n=document.querySelector("#snipcart"),i=document.querySelector('src[src^="'.concat(window.SnipcartSettings.protocol,"://").concat(window.SnipcartSettings.domain,'"][src$="snipcart.js"]')),e=document.querySelector('link[href^="'.concat(window.SnipcartSettings.protocol,"://").concat(window.SnipcartSettings.domain,'"][href$="snipcart.css"]'));n||(n=document.createElement("div"),n.id="snipcart",n.setAttribute("hidden","true"),document.body.appendChild(n)),h(n),i||(i=document.createElement("script"),i.src="".concat(window.SnipcartSettings.protocol,"://").concat(window.SnipcartSettings.domain,"/themes/v").concat(window.SnipcartSettings.version,"/default/snipcart.js"),i.async=!0,t.appendChild(i)),!e&&window.SnipcartSettings.loadCSS&&(e=document.createElement("link"),e.rel="stylesheet",e.type="text/css",e.href="".concat(window.SnipcartSettings.protocol,"://").concat(window.SnipcartSettings.domain,"/themes/v").concat(window.SnipcartSettings.version,"/default/snipcart.css"),t.prepend(e)),f.forEach(function(v){return document.removeEventListener(v,o)})}function h(t){!y||(t.dataset.apiKey=window.SnipcartSettings.publicApiKey,window.SnipcartSettings.addProductBehavior&&(t.dataset.configAddProductBehavior=window.SnipcartSettings.addProductBehavior),window.SnipcartSettings.modalStyle&&(t.dataset.configModalStyle=window.SnipcartSettings.modalStyle),window.SnipcartSettings.currency&&(t.dataset.currency=window.SnipcartSettings.currency),window.SnipcartSettings.templatesUrl&&(t.dataset.templatesUrl=window.SnipcartSettings.templatesUrl))}})();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCartUI();
+            const form = document.getElementById('checkoutForm');
+            if(form) form.addEventListener('submit', handleCheckout);
+        });
     </script>
 </body>
 </html>
