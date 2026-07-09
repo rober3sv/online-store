@@ -165,9 +165,20 @@
 
     <div class="container">
         <div class="product-container">
-            <div class="product-image" style="display: flex; flex-direction: column; gap: 20px;">
-                <img id="product-image-display" src="c10-petg.jpg" alt="1967-1972 C-10 Integrated Fitting Assembly">
-                <img src="LMC-Page-screenshot.jpg" alt="LMC Catalog Reference Page" style="border: 1px solid #dcdde1; border-radius: 4px;">
+            
+            <div class="product-image" style="position: relative; overflow: hidden; border-radius: 8px;">
+                
+                <div class="carousel-slide" style="display: block;">
+                    <img id="product-image-display" src="c10-petg.jpg" alt="1967-1972 C-10 Integrated Fitting Assembly" style="width: 100%; display: block;">
+                </div>
+                
+                <div class="carousel-slide" style="display: none;">
+                    <img src="LMC-Page-screenshot.jpg" alt="LMC Catalog Reference Page" style="width: 100%; display: block; border: 1px solid #dcdde1; box-sizing: border-box;">
+                </div>
+
+                <button id="prev-slide" style="position: absolute; top: 50%; left: 10px; transform: translateY(-50%); background-color: rgba(30, 39, 46, 0.8); color: white; border: none; padding: 10px 15px; cursor: pointer; border-radius: 4px; font-size: 18px;">&#10094;</button>
+                <button id="next-slide" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); background-color: rgba(30, 39, 46, 0.8); color: white; border: none; padding: 10px 15px; cursor: pointer; border-radius: 4px; font-size: 18px;">&#10095;</button>
+                
             </div>
             <div class="product-details">
                 <h2>1967-1972 Chevy C-10 Integrated Fitting Assembly</h2>
@@ -373,14 +384,20 @@
             // Add the image target variable
             const productImage = document.getElementById('product-image-display');
 
-            select.addEventListener('change', (e) => {
-                if (e.target.value === 'ABS') { 
-                    display.textContent = '$20.00'; 
-                    productImage.src = 'c10-abs.jpg'; // Swaps to ABS image
-                } else { 
-                    display.textContent = '$15.00'; 
-                    productImage.src = 'c10-petg.jpg'; // Swaps to PETG image
-                }
+            // --- CAROUSEL LOGIC ---
+            const slides = document.querySelectorAll('.carousel-slide');
+            let currentSlide = 0;
+
+            document.getElementById('prev-slide').addEventListener('click', () => {
+                slides[currentSlide].style.display = 'none'; // Hide current image
+                currentSlide = (currentSlide === 0) ? slides.length - 1 : currentSlide - 1; // Go back, or loop to end
+                slides[currentSlide].style.display = 'block'; // Show new image
+            });
+
+            document.getElementById('next-slide').addEventListener('click', () => {
+                slides[currentSlide].style.display = 'none'; // Hide current image
+                currentSlide = (currentSlide === slides.length - 1) ? 0 : currentSlide + 1; // Go forward, or loop to start
+                slides[currentSlide].style.display = 'block'; // Show new image
             });
         }
 
